@@ -26,6 +26,7 @@ const schema = new mongoose.Schema(
 		},
 	},
 )
+schema.set('timestamps', true)
 
 interface UserModel extends Omit<IUser, '_id'>, Document {}
 export const User: Model<UserModel> = mongoose.model('User', schema)
