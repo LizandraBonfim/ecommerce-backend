@@ -9,8 +9,10 @@ export class SetupServer extends Server {
 	}
 
 	public async init(): Promise<void> {
+		console.log('teste')
 		this.setupExpress()
 		this.setupControllers()
+
 		await this.databaseSetup()
 	}
 
@@ -20,6 +22,7 @@ export class SetupServer extends Server {
 
 	private setupControllers(): void {
 		const user = new UsersController()
+		console.log('teste')
 		this.addControllers([user])
 	}
 
@@ -29,6 +32,12 @@ export class SetupServer extends Server {
 
 	public async close(): Promise<void> {
 		await database.close()
+	}
+
+	public start(): void {
+		this.app.listen(this.port, () => {
+			console.log(`Server listening of port: ${this.port}`)
+		})
 	}
 
 	public getApp(): Application {
