@@ -22,7 +22,6 @@ export class SetupServer extends Server {
 
 	private setupControllers(): void {
 		const user = new UsersController()
-		console.log('teste')
 		this.addControllers([user])
 	}
 

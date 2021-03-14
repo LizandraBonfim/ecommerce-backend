@@ -3,6 +3,9 @@ import { User } from '@src/models/users'
 import { TEXT_GERAL } from '@src/util/textGeral'
 import { Request, Response } from 'express'
 import AuthService from '@src/services/auth'
+import { UsersServices } from '@src/services/usersServices'
+import { IUser } from '@src/interfaces/user'
+import { validateFields } from '@src/util/validator'
 @Controller('users')
 export class UsersController {
 	@Post('')
@@ -10,7 +13,7 @@ export class UsersController {
 		try {
 			const user = req.body
 
-			// const fieldsValidate =
+			validateFields(user)
 			const userExists = await User.findOne({
 				email: user.email,
 				documentNumber: user.documentNumber,
@@ -34,7 +37,7 @@ export class UsersController {
 		}
 	}
 
-	@Get('auth')
+	@Post('auth')
 	//middleware
 	public async authenticate(req: Request, res: Response): Promise<void> {
 		const { email, password } = req.body

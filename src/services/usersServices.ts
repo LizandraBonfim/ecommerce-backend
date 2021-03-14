@@ -1,8 +1,8 @@
 import { StormGlass } from '@src/clients/stormGlass'
 import { Order } from '@src/interfaces/order'
+import { IUser } from '@src/interfaces/user'
 
-
-export class Users {
+export class UsersServices {
 	constructor(protected user = new StormGlass()) {}
 
 	public async processUserForOrders(orders: Order[]): Promise<Order[]> {
@@ -10,6 +10,6 @@ export class Users {
 		for (const index of orders) {
 		}
 
-        return orders
+		return orders
 	}
 }
