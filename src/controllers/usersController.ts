@@ -3,8 +3,7 @@ import { User } from '@src/models/users'
 import { TEXT_GERAL } from '@src/util/textGeral'
 import { Request, Response } from 'express'
 import AuthService from '@src/services/auth'
-import { UsersServices } from '@src/services/usersServices'
-import { IUser } from '@src/interfaces/user'
+
 import { validateFields } from '@src/util/validator'
 import { BaseController } from '.'
 @Controller('users')
