@@ -6,14 +6,16 @@ import AuthService from '@src/services/auth'
 import { UsersServices } from '@src/services/usersServices'
 import { IUser } from '@src/interfaces/user'
 import { validateFields } from '@src/util/validator'
+import { BaseController } from '.'
 @Controller('users')
-export class UsersController {
+export class UsersController extends BaseController {
 	@Post('')
 	public async create(req: Request, res: Response): Promise<void> {
 		try {
 			const user = req.body
 
-			validateFields(user)
+			const validate = validateFields(user)
+
 			const userExists = await User.findOne({
 				email: user.email,
 				documentNumber: user.documentNumber,
@@ -21,19 +23,18 @@ export class UsersController {
 
 			if (userExists) {
 				throw {
-					code: 402,
+					code: 409,
 					message: TEXT_GERAL.USER_EXISTS,
 				}
 			}
-			const hashPassword = await AuthService.hashPassword(req.body.password)
 
-			const newUser = new User({ ...user, password: hashPassword })
+			const newUser = new User(validate)
 
 			const result = await newUser.save()
 
 			res.status(201).send(result)
 		} catch (error) {
-			res.status(error.code).json(error)
+			this.sendCreateUpdateErrorResponse(res, error)
 		}
 	}
 
@@ -46,12 +47,14 @@ export class UsersController {
 			email,
 		})
 
-		if (userExists) {
+		if (!userExists) {
 			throw {
 				code: 402,
-				message: TEXT_GERAL.USER_EXISTS,
+				message: TEXT_GERAL.USER_NOT_FOUND,
 			}
 		}
+
+		const hashPassword = await AuthService.hashPassword(password)
 
 		res.send()
 	}

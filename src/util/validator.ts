@@ -1,12 +1,19 @@
 import { GenderEnum, CreateNewUser } from '@src/interfaces/user'
 
-export function validateFields(user: CreateNewUser) {
+export function validateFields(user: CreateNewUser): CreateNewUser {
+
+	debugger
+	user.documentNumber = cleanDocumentNumber(user.documentNumber.trim())
+	user.cellphone = cleanPhoneNumber(user.cellphone.trim())
+
 	const name = !!user.name.trim()
 	const email = !!checkEmail(user.email.trim())
 	const password = !!checkPassword(user.password.trim())
 	const gender = !!(user.gender === GenderEnum.FEMININO || GenderEnum.MASCULINO)
-	const cellphone = !!checkTel(user.cellphone.trim())
-	const documentNumber = !!checkCPF(user.documentNumber.trim())
+	const cellphone = !!checkTel(user.cellphone)
+	const documentNumber = !!checkCPF(user.documentNumber)
+
+	console.log('user', user)
 
 	const validationResult = {
 		name,
@@ -31,6 +38,8 @@ export function validateFields(user: CreateNewUser) {
 			message: `Erro no formato da requisição: ${userNew}`,
 		}
 	}
+
+	return user
 }
 
 export const IS_VALID_EMAIL = /^(([^<>()[\]\\.,:\s@"]+(\.[^<>()[\]\\.,:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
@@ -180,4 +189,12 @@ export function checkTel(telephone: string): boolean {
 	if (ALL_SAME_NUMBER.test(tel)) return false
 
 	return validDDDs.includes(Number(ddd))
+}
+
+export function cleanDocumentNumber(documentNumber: string): string {
+	return documentNumber.replace(/[-/.]/g, '')
+}
+
+export function cleanPhoneNumber(numberPhone: string): string {
+	return numberPhone.replace(/[-/./(/)/ ]/g, '')
 }

@@ -1,35 +1,57 @@
+import { User } from '@src/models/users'
+import AuthService from '@src/services/auth'
+import { checkPassword } from '@src/util/validator'
+
 describe('Create Account functional tests', () => {
-	it('should create a account for user', async () => {
-		const newUser = {
-			name: 'Julia',
-			password: 'Portal123!',
-			gender: 'Feminino',
-			cellphone: '11966596795',
-			documentNumber: '222080164',
-			email: 'julia@email.com',
-		}
+	// beforeEach(async () => {
+	// 	await User.deleteMany({})
+	// })
 
-		const response = await global.testRequest
-			.post('/users')
-			.send(newUser)
-
-		expect(response.status).toBe(201)
-		expect(response.body).toEqual(newUser)
-	})
-
-	it('should list all users', async () => {
-		const response = await global.testRequest.get('/users')
-
-		expect(response.status).toBe(200)
-		expect(response.body).toEqual([
-			{
+	describe('When creating a new user', () => {
+		it('should create a account for user', async () => {
+			const newUser = {
 				name: 'Julia',
 				password: 'Portal123!',
-				gender: 'Feminino',
+				gender: 'FEMINIMO',
 				cellphone: '11966596795',
-				documentNumber: '222080164',
-				email: 'julia@email.com',
-			},
-		])
+				documentNumber: '27305187039',
+				email: 'jeeeuliaddd3@email.com',
+			}
+
+			const response = await global.testRequest.post('/users').send(newUser)
+
+			console.log('response', response)
+			expect(response.status).toBe(201)
+			await expect(
+				AuthService.comparePassword(newUser.password, response.body.password),
+			).resolves.toBeTruthy()
+			expect(response.body).toEqual(
+				expect.objectContaining({
+					...newUser,
+					...{ password: expect.any(String) },
+				}),
+			)
+		})
+
+		it('should return error if email already exists', async () => {
+			const newUser = {
+				name: 'Julia',
+				password: 'Portal123!',
+				gender: 'FEMINIMO',
+				cellphone: '11966596795',
+				documentNumber: '89075199007',
+				email: 'julia3@email.com',
+			}
+
+			await global.testRequest.post('/users').send(newUser)
+			const response = await global.testRequest.post('/users').send(newUser)
+
+			expect(response.status).toBe(409)
+			expect(response.body).toEqual({
+				code: 409,
+				error:
+					'User validation failed: email: command aggregate requires authentication',
+			})
+		})
 	})
 })
