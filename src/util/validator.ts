@@ -1,17 +1,14 @@
 import { GenderEnum, CreateNewUser } from '@src/interfaces/user'
 
 export function validateFields(user: CreateNewUser): CreateNewUser {
-
-	debugger
-	user.documentNumber = cleanDocumentNumber(user.documentNumber.trim())
-	user.cellphone = cleanPhoneNumber(user.cellphone.trim())
-
 	const name = !!user.name.trim()
 	const email = !!checkEmail(user.email.trim())
 	const password = !!checkPassword(user.password.trim())
 	const gender = !!(user.gender === GenderEnum.FEMININO || GenderEnum.MASCULINO)
-	const cellphone = !!checkTel(user.cellphone)
-	const documentNumber = !!checkCPF(user.documentNumber)
+	const cellphone = !!checkTel(cleanPhoneNumber(user.cellphone.trim()))
+	const documentNumber =
+		user.documentNumber &&
+		!!checkCPF(cleanDocumentNumber(user.documentNumber.trim()))
 
 	console.log('user', user)
 

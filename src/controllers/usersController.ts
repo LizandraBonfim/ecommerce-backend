@@ -40,21 +40,34 @@ export class UsersController extends BaseController {
 	@Post('auth')
 	//middleware
 	public async authenticate(req: Request, res: Response): Promise<void> {
-		const { email, password } = req.body
+		try {
+			const { email, password } = req.body
 
-		const userExists = await User.findOne({
-			email,
-		})
+			const userExists = await User.findOne({
+				email,
+			})
 
-		if (!userExists) {
-			throw {
-				code: 402,
-				message: TEXT_GERAL.USER_NOT_FOUND,
+			if (!userExists) {
+				throw {
+					code: 402,
+					message: TEXT_GERAL.USER_NOT_FOUND,
+				}
 			}
+
+			if (!(await AuthService.comparePassword(password, userExists.password))) {
+				throw {
+					code: 409,
+					message: TEXT_GERAL.PASSWORD_NOT_MATCH,
+				}
+			}
+
+			const token = AuthService.generateToken(userExists)
+
+			console.log({ token })
+
+			res.status(201).send({ token })
+		} catch (error) {
+			this.sendCreateUpdateErrorResponse(res, error)
 		}
-
-		const hashPassword = await AuthService.hashPassword(password)
-
-		res.send()
 	}
 }
