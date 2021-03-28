@@ -63,5 +63,16 @@ schema.path('email').validate(
 	CUSTOM_VALIDATION.DUPLICATED,
 )
 
+schema.path('documentNumber').validate(
+	async (documentNumber: string) => {
+		const document = await mongoose.models.User.countDocuments({
+			documentNumber,
+		})
+		return !document 
+	},
+	'already exists in the database.',
+	CUSTOM_VALIDATION.DUPLICATED,
+)
+
 interface UserModel extends Omit<IUser, '_id'>, Document {}
 export const User: Model<UserModel> = mongoose.model('User', schema)
