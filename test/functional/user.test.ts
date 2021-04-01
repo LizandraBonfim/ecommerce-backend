@@ -10,16 +10,16 @@ describe('Create Account functional tests', () => {
 
 	describe('When creating a new user', () => {
 		it('should create a account for user', async () => {
-			const newUser = {
+			const user : CreateNewUser = {
 				name: 'Julia',
 				password: 'Portal123!',
-				gender: 'FEMININO',
+				gender: GenderEnum.FEMININO,
 				cellphone: '11966596795',
 				documentNumber: '27305187041',
 				email: 'julia1@email.com',
 			}
 
-			// const newUser = validateFields(user)
+			const newUser = validateFields(user)
 
 			const response = await global.testRequest.post('/users').send(newUser)
 
@@ -64,7 +64,7 @@ describe('Create Account functional tests', () => {
 				gender: 'FEMININO',
 				cellphone: '11966596795',
 				documentNumber: '89075199007',
-				email: 'julia1@email.com',
+				email: 'julia@email.com',
 			}
 
 			await global.testRequest.post('/users').send(newUser)
@@ -74,6 +74,23 @@ describe('Create Account functional tests', () => {
 			expect(response.body).toEqual({
 				error: 'command find requires authentication',
 			})
+		})
+	})
+})
+
+describe('When authenticating a user', () => {
+	it('should generate a token if valid user', async () => {
+		const user = {
+			email: 'julia1@email.com',
+			password: 'Portal123!',
+		}
+
+		const response = await global.testRequest.post('/users/auth').send(user)
+
+		console.log('authn', response.body)
+
+		expect(response.body).toEqual({
+			token: expect.any(String),
 		})
 	})
 })
