@@ -6,26 +6,30 @@ import AuthService from '@src/services/auth'
 
 import { validateFields } from '@src/util/validator'
 import { BaseController } from '.'
+import { IUser } from '@src/interfaces/user'
 @Controller('users')
 export class UsersController extends BaseController {
 	@Post('')
-	public async create(req: Request, res: Response): Promise<void> {
+	public async create(
+		req: Request,
+		res: Response,
+	): Promise<Response | any> {
 		try {
 			const user = req.body
-
-			const validate = validateFields(user)
 
 			const userExists = await User.findOne({
 				email: user.email,
 				documentNumber: user.documentNumber,
 			})
 
-			if (userExists) {
-				throw {
-					code: 409,
-					message: TEXT_GERAL.USER_EXISTS,
-				}
+			if (!userExists) {
+				return res.status(402).send({
+					code: 402,
+					error: TEXT_GERAL.USER_NOT_FOUND,
+				})
 			}
+
+			const validate = validateFields(user)
 
 			const newUser = new User(validate)
 
@@ -39,7 +43,10 @@ export class UsersController extends BaseController {
 
 	@Post('auth')
 	//middleware
-	public async authenticate(req: Request, res: Response): Promise<void> {
+	public async authenticate(
+		req: Request,
+		res: Response,
+	): Promise<Response | any> {
 		try {
 			const { email, password } = req.body
 
@@ -48,20 +55,20 @@ export class UsersController extends BaseController {
 			})
 
 			if (!userExists) {
-				throw {
+				return res.status(402).send({
 					code: 402,
-					message: TEXT_GERAL.USER_NOT_FOUND,
-				}
+					error: TEXT_GERAL.USER_NOT_FOUND,
+				})
 			}
 
 			if (!(await AuthService.comparePassword(password, userExists.password))) {
-				throw {
+				return res.status(402).send({
 					code: 409,
-					message: TEXT_GERAL.PASSWORD_NOT_MATCH,
-				}
+					error: TEXT_GERAL.PASSWORD_NOT_MATCH,
+				})
 			}
 
-			const token = AuthService.generateToken(userExists)
+			const token = AuthService.generateToken(userExists.toJSON())
 
 			console.log({ token })
 

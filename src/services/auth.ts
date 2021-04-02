@@ -28,7 +28,7 @@ export default class AuthService {
 		})
 	}
 
-	public decodeToken(token: string): DecodedUser {
+	public static decodedToken(token: string): DecodedUser {
 		return jwt.verify(token, config.get('App.auth.key')) as DecodedUser
 	}
 }
