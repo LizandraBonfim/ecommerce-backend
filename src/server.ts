@@ -4,6 +4,7 @@ import express, { Application } from 'express'
 import { UsersController } from './controllers/usersController'
 import * as database from '@src/database'
 import { ProductsController } from './controllers/productsController'
+import logger from './logger'
 export class SetupServer extends Server {
 	constructor(private port = 3000) {
 		super()
@@ -37,7 +38,7 @@ export class SetupServer extends Server {
 
 	public start(): void {
 		this.app.listen(this.port, () => {
-			console.log(`Server listening of port: ${this.port}`)
+			logger.info(`Server listening of port: ${this.port}`)
 		})
 	}
 

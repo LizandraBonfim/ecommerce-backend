@@ -12,6 +12,10 @@
 			"StormGlass": {
 				"apiToken": "test-token"
 			}
+		},
+		"logger": {
+			"enable": true,
+			"level": "info"
 		}
 	}
 }
