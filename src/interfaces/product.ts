@@ -1,3 +1,5 @@
+import { IUser } from "./user";
+
 export interface IProduct {
 	_id: string
 	name: string
@@ -10,6 +12,7 @@ export interface IProduct {
 	width: number //largura
 	length: number //comprimento
 	variety?: IVariety[] //variedades
+	createdByUser: IUser
 }
 
 interface IVariety {

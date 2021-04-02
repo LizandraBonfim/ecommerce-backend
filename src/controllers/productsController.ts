@@ -4,6 +4,7 @@ import { IProduct } from '@src/interfaces/product'
 import { authMiddlewareAdmin } from '@src/middlewares/authAdmin'
 import { Product } from '@src/models/products'
 import { BaseController } from '.'
+import { UsersServices } from '@src/services/usersServices'
 
 @Controller('products')
 export class ProductsController extends BaseController {
@@ -11,7 +12,12 @@ export class ProductsController extends BaseController {
 	@Middleware(authMiddlewareAdmin)
 	public async create(req: Request, res: Response): Promise<Response | any> {
 		try {
-			const product: IProduct = req.body
+			const email = req.decoded ? req.decoded.email : undefined
+
+			const userExists = await UsersServices.getUser(email)
+
+			let product: IProduct = req.body
+			product.createdByUser = userExists.id
 
 			const newProduct = new Product(product)
 

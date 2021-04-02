@@ -1,6 +1,6 @@
+import mongoose, { Model, Document, model, Schema } from 'mongoose'
 import { IUser } from '@src/interfaces/user'
 import AuthService from '@src/services/auth'
-import mongoose, { Model, Document } from 'mongoose'
 
 export enum CUSTOM_VALIDATION {
 	DUPLICATED = 'DUPLICATED',
@@ -23,6 +23,7 @@ const schema = new mongoose.Schema(
 			unique: [true, 'Email must be unique'],
 		},
 		role: { type: String, required: true, default: 'CUSTOMER' },
+		address: { type: Schema.Types.ObjectId, ref: 'Address', required: false },
 		payment: { type: String, required: false }, //undefined
 		orders: { type: String, required: false }, //undefined
 	},
@@ -71,3 +72,9 @@ schema.path('documentNumber').validate(
 
 interface UserModel extends Omit<IUser, '_id'>, Document {}
 export const User: Model<UserModel> = mongoose.model('User', schema)
+
+// export default model<MongoDocument<IUser>>(
+// 	'User',
+// 	UserSchema,
+// 	'users'
+// ) as UserModelWithPagination

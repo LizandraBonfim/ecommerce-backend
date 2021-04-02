@@ -8,6 +8,9 @@ import { validateFields } from '@src/util/validator'
 import { BaseController } from '.'
 import { IUser } from '@src/interfaces/user'
 import { authMiddleware } from '@src/middlewares/auth'
+import { IAddress } from '@src/interfaces/address'
+import { Address } from '@src/models/address'
+import { UsersServices } from '../services/usersServices'
 @Controller('users')
 export class UsersController extends BaseController {
 	@Post('')
@@ -15,18 +18,7 @@ export class UsersController extends BaseController {
 		try {
 			const user: IUser = req.body
 
-			const userExists = await User.findOne({
-				email: user.email,
-				documentNumber: user.documentNumber,
-			})
-
-			console.log('userExists', userExists)
-			if (userExists) {
-				return res.status(402).send({
-					code: 402,
-					error: TEXT_GERAL.USER_EXISTS,
-				})
-			}
+			await UsersServices.getUser(user.email, user.documentNumber)
 
 			const validate = validateFields(user)
 
@@ -48,17 +40,12 @@ export class UsersController extends BaseController {
 		try {
 			const { email, password } = req.body
 
-			const userExists = await User.findOne({
-				email,
-			})
+			console.log('req.body', req.body)
 
-			if (!userExists) {
-				return res.status(402).send({
-					code: 402,
-					error: TEXT_GERAL.USER_NOT_FOUND,
-				})
-			}
+			const userExists = await UsersServices.getUser(email)
 
+			console.log('userExists', userExists)
+			
 			if (!(await AuthService.comparePassword(password, userExists.password))) {
 				return res.status(402).send({
 					code: 409,
@@ -79,18 +66,45 @@ export class UsersController extends BaseController {
 	@Get('me')
 	@Middleware(authMiddleware)
 	public async myProfile(req: Request, res: Response): Promise<Response | any> {
-		const email = req.decoded ? req.decoded.email : undefined
-		const userExists = await User.findOne({
-			email,
-		})
+		try {
+			const email = req.decoded ? req.decoded.email : undefined
+			const userExists = await UsersServices.getUser(email)
 
-		if (!userExists) {
-			return res.status(402).send({
-				code: 402,
-				error: TEXT_GERAL.USER_NOT_FOUND,
+			res.send({ userExists })
+		} catch (err) {
+			res.status(400).json({
+				code: 400,
+				error: TEXT_GERAL.NOT_AUTHORIZATION,
 			})
 		}
+	}
 
-		return res.send({ userExists })
+	@Post('address')
+	@Middleware(authMiddleware)
+	public async addAddress(
+		req: Request,
+		res: Response,
+	): Promise<Response | any> {
+		try {
+			const email = req.decoded ? req.decoded.email : undefined
+
+			const userExists = await UsersServices.getUser(email)
+
+			const address: IAddress = req.body
+
+			const newAddress = new Address(address)
+			const sendAdress = await newAddress.save()
+
+			await UsersServices.addAddressId(userExists.id, sendAdress.id)
+
+			res.status(201).send({
+				message: TEXT_GERAL.ADDRESS_SEND,
+			})
+		} catch (error) {
+			res.status(401).json({
+				code: 401,
+				error: TEXT_GERAL.ADDRESS_NOT_SEND,
+			})
+		}
 	}
 }

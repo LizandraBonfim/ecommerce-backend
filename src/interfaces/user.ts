@@ -1,4 +1,4 @@
-import { Address } from './address'
+import { IAddress } from './address'
 
 export interface IUser {
 	_id?: string
@@ -12,7 +12,7 @@ export interface IUser {
 	payment?: string //undefined
 	orders?: string //undefined
 	rule: CustomerRoleEnum
-	address?: Address
+	address?: IAddress
 }
 
 export interface CreateNewUser {

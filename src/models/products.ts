@@ -1,5 +1,5 @@
 import { IProduct } from '@src/interfaces/product'
-import mongoose, { Model, Document } from 'mongoose'
+import mongoose, { Model, Document, Schema } from 'mongoose'
 
 const schema = new mongoose.Schema(
 	{
@@ -13,6 +13,7 @@ const schema = new mongoose.Schema(
 		length: { type: Number, required: true },
 		width: { type: Number, required: true },
 		variety: { type: Array, required: false },
+		createdByUser: { type: Schema.Types.ObjectId, ref: 'User', required: false },
 	},
 	{
 		toJSON: {
