@@ -1,3 +1,5 @@
+import { Address } from './address'
+
 export interface IUser {
 	_id?: string
 	name: string
@@ -7,14 +9,10 @@ export interface IUser {
 	documentNumber: string
 	email: string
 
-	street?: string
-	neighborhood?: string
-	houseNumber?: string
-	city?: string
-	state?: string
 	payment?: string //undefined
 	orders?: string //undefined
-	role: CustomerRoleEnum
+	rule: CustomerRoleEnum
+	address?: Address
 }
 
 export interface CreateNewUser {
@@ -33,7 +31,7 @@ export enum GenderEnum {
 
 export enum RoleCustomerEnum {
 	ADMIN,
-	CUSTOMER
+	CUSTOMER,
 }
 
 enum GenderCustomer {

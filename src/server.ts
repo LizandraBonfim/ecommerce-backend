@@ -3,6 +3,7 @@ import { Server } from '@overnightjs/core'
 import express, { Application } from 'express'
 import { UsersController } from './controllers/usersController'
 import * as database from '@src/database'
+import { ProductsController } from './controllers/productsController'
 export class SetupServer extends Server {
 	constructor(private port = 3000) {
 		super()
@@ -22,7 +23,8 @@ export class SetupServer extends Server {
 
 	private setupControllers(): void {
 		const user = new UsersController()
-		this.addControllers([user])
+		const product = new ProductsController()
+		this.addControllers([user, product])
 	}
 
 	private async databaseSetup(): Promise<void> {

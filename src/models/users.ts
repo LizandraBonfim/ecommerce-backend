@@ -23,11 +23,6 @@ const schema = new mongoose.Schema(
 			unique: [true, 'Email must be unique'],
 		},
 		role: { type: String, required: true, default: 'CUSTOMER' },
-		street: { type: String, required: false },
-		neighborhood: { type: String, required: false },
-		houseNumber: { type: String, required: false },
-		city: { type: String, required: false },
-		state: { type: String, required: false },
 		payment: { type: String, required: false }, //undefined
 		orders: { type: String, required: false }, //undefined
 	},

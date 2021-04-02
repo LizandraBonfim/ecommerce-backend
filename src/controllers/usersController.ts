@@ -1,4 +1,4 @@
-import { Controller, Get, Post } from '@overnightjs/core'
+import { Controller, Get, Middleware, Post } from '@overnightjs/core'
 import { User } from '@src/models/users'
 import { TEXT_GERAL } from '@src/util/textGeral'
 import { Request, Response } from 'express'
@@ -7,17 +7,13 @@ import AuthService from '@src/services/auth'
 import { validateFields } from '@src/util/validator'
 import { BaseController } from '.'
 import { IUser } from '@src/interfaces/user'
+import { authMiddleware } from '@src/middlewares/auth'
 @Controller('users')
 export class UsersController extends BaseController {
 	@Post('')
-	public async create(
-		req: Request,
-		res: Response,
-	): Promise<Response | any> {
+	public async create(req: Request, res: Response): Promise<Response | any> {
 		try {
-			const user = req.body
-
-			console.log('user', user)
+			const user: IUser = req.body
 
 			const userExists = await User.findOne({
 				email: user.email,
@@ -45,7 +41,6 @@ export class UsersController extends BaseController {
 	}
 
 	@Post('auth')
-	//middleware
 	public async authenticate(
 		req: Request,
 		res: Response,
@@ -79,5 +74,23 @@ export class UsersController extends BaseController {
 		} catch (error) {
 			this.sendCreateUpdateErrorResponse(res, error)
 		}
+	}
+
+	@Get('me')
+	@Middleware(authMiddleware)
+	public async myProfile(req: Request, res: Response): Promise<Response | any> {
+		const email = req.decoded ? req.decoded.email : undefined
+		const userExists = await User.findOne({
+			email,
+		})
+
+		if (!userExists) {
+			return res.status(402).send({
+				code: 402,
+				error: TEXT_GERAL.USER_NOT_FOUND,
+			})
+		}
+
+		return res.send({ userExists })
 	}
 }
