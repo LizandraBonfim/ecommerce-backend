@@ -22,7 +22,7 @@ const schema = new mongoose.Schema(
 			required: true,
 			unique: [true, 'Email must be unique'],
 		},
-
+		role: { type: String, required: true, default: 'CUSTOMER' },
 		street: { type: String, required: false },
 		neighborhood: { type: String, required: false },
 		houseNumber: { type: String, required: false },
@@ -68,7 +68,7 @@ schema.path('documentNumber').validate(
 		const document = await mongoose.models.User.countDocuments({
 			documentNumber,
 		})
-		return !document 
+		return !document
 	},
 	'already exists in the database.',
 	CUSTOM_VALIDATION.DUPLICATED,

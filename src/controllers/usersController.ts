@@ -17,15 +17,18 @@ export class UsersController extends BaseController {
 		try {
 			const user = req.body
 
+			console.log('user', user)
+
 			const userExists = await User.findOne({
 				email: user.email,
 				documentNumber: user.documentNumber,
 			})
 
-			if (!userExists) {
+			console.log('userExists', userExists)
+			if (userExists) {
 				return res.status(402).send({
 					code: 402,
-					error: TEXT_GERAL.USER_NOT_FOUND,
+					error: TEXT_GERAL.USER_EXISTS,
 				})
 			}
 

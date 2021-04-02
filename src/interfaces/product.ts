@@ -5,10 +5,10 @@ export interface IProduct {
 	photo: string[]
 	price: number
 	stock: number //estoque
-	weight: number //largura
+	weight: number //peso
 	height: number //altura
+	width: number //largura
 	length: number //comprimento
-	pound: number //peso
 	variety?: IVariety[] //variedades
 }
 

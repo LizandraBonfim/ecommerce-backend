@@ -11,7 +11,7 @@ const schema = new mongoose.Schema(
 		weight: { type: Number, required: true },
 		height: { type: Number, required: true },
 		length: { type: Number, required: true },
-		pound: { type: Number, required: true },
+		width: { type: Number, required: true },
 		variety: { type: Array, required: false },
 	},
 	{

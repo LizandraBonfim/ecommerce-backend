@@ -14,9 +14,10 @@ export interface IUser {
 	state?: string
 	payment?: string //undefined
 	orders?: string //undefined
+	role: CustomerRoleEnum
 }
 
-export interface CreateNewUser{
+export interface CreateNewUser {
 	name: string
 	password: string
 	gender: GenderEnum
@@ -30,9 +31,15 @@ export enum GenderEnum {
 	MASCULINO,
 }
 
-enum CustomerCategories {
+export enum RoleCustomerEnum {
+	ADMIN,
+	CUSTOMER
+}
+
+enum GenderCustomer {
 	'FEMININO',
 	'MASCULINO',
 }
 
-export type CustomerCategoriesEnum = keyof typeof CustomerCategories
+export type CustomerGenderEnum = keyof typeof GenderCustomer
+export type CustomerRoleEnum = keyof typeof RoleCustomerEnum

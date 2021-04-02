@@ -1,4 +1,7 @@
 export interface Order {
 	price: Number
-    productId: string
+	productId: string
+	userId: string
+	endereco: any
+	quantity: number
 }
