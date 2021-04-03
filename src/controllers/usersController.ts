@@ -18,9 +18,19 @@ export class UsersController extends BaseController {
 		try {
 			const user: IUser = req.body
 
-			await UsersServices.getUser(user.email, user.documentNumber)
-
 			const validate = validateFields(user)
+
+			const userExists = await User.findOne({
+				email: validate.email,
+				documentNumber: validate.documentNumber,
+			})
+
+			if (userExists) {
+				throw {
+					code: 400,
+					message: TEXT_GERAL.USER_EXISTS,
+				}
+			}
 
 			const newUser = new User(validate)
 
@@ -28,7 +38,8 @@ export class UsersController extends BaseController {
 
 			res.status(201).send(result)
 		} catch (error) {
-			this.sendCreateUpdateErrorResponse(res, error)
+			// this.sendCreateUpdateErrorResponse(res, error)
+			res.status(400).json({ code: 400, error: error.message })
 		}
 	}
 
@@ -40,12 +51,8 @@ export class UsersController extends BaseController {
 		try {
 			const { email, password } = req.body
 
-			console.log('req.body', req.body)
-
 			const userExists = await UsersServices.getUser(email)
 
-			console.log('userExists', userExists)
-			
 			if (!(await AuthService.comparePassword(password, userExists.password))) {
 				return res.status(402).send({
 					code: 409,
@@ -53,13 +60,13 @@ export class UsersController extends BaseController {
 				})
 			}
 
-			const token = AuthService.generateToken(userExists.toJSON())
+			const token = AuthService.generateToken(userExists._id)
 
 			console.log({ token })
-
-			res.status(201).send({ token })
+			return res.send({ ...userExists.toJSON(), ...{ token } })
 		} catch (error) {
-			this.sendCreateUpdateErrorResponse(res, error)
+			// this.sendCreateUpdateErrorResponse(res, error)
+			res.status(400).json({ code: 400, error: error.message })
 		}
 	}
 
@@ -67,8 +74,8 @@ export class UsersController extends BaseController {
 	@Middleware(authMiddleware)
 	public async myProfile(req: Request, res: Response): Promise<Response | any> {
 		try {
-			const email = req.decoded ? req.decoded.email : undefined
-			const userExists = await UsersServices.getUser(email)
+			const userId = req.context?.userId
+			const userExists = await UsersServices.getUser('', '', userId)
 
 			res.send({ userExists })
 		} catch (err) {
@@ -86,9 +93,9 @@ export class UsersController extends BaseController {
 		res: Response,
 	): Promise<Response | any> {
 		try {
-			const email = req.decoded ? req.decoded.email : undefined
+			const userId = req.context?.userId
 
-			const userExists = await UsersServices.getUser(email)
+			const userExists = await UsersServices.getUser('', '', userId)
 
 			const address: IAddress = req.body
 

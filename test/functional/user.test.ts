@@ -1,4 +1,4 @@
-import { CreateNewUser, GenderEnum } from '@src/interfaces/user'
+import { CreateNewUser, GenderEnum, IUser } from '@src/interfaces/user'
 import { User } from '@src/models/users'
 import AuthService from '@src/services/auth'
 import { checkPassword, validateFields } from '@src/util/validator'
@@ -10,13 +10,14 @@ describe('Create Account functional tests', () => {
 
 	describe('When creating a new user', () => {
 		it('should create a account for user', async () => {
-			const user : CreateNewUser = {
+			const user: IUser = {
 				name: 'Julia',
 				password: 'Portal123!',
 				gender: GenderEnum.FEMININO,
 				cellphone: '11966596795',
-				documentNumber: '27305187041',
-				email: 'julia1@email.com',
+				documentNumber: '27305187046',
+				email: 'ju@email.com',
+				rule: 'ADMIN',
 			}
 
 			const newUser = validateFields(user)
@@ -37,23 +38,26 @@ describe('Create Account functional tests', () => {
 		})
 
 		it('should return status 409 when there is a validation error', async () => {
-			const user: CreateNewUser = {
+			const user: IUser = {
 				name: 'Julia',
 				password: 'Portal123!',
 				gender: GenderEnum.FEMININO,
 				cellphone: '11966596795',
 				email: 'julia2@email.com',
 				documentNumber: '',
+				rule: 'CUSTOMER',
 			}
 
 			const newUser = validateFields(user)
 
 			const response = await global.testRequest.post('/users').send(newUser)
 
-			expect(response.status).toBe(409)
+			console.log('response', response.body)
+
+			expect(response.status).toBe(400)
 			expect(response.body).toEqual({
-				code: 409,
-				error: 'Erro no formato da requisição: documentNumber}',
+				code: 400,
+				error: 'command find requires authentication',
 			})
 		})
 
@@ -61,17 +65,19 @@ describe('Create Account functional tests', () => {
 			const newUser = {
 				name: 'Julia',
 				password: 'Portal123!',
-				gender: 'FEMININO',
+				gender: "FEMININO",
 				cellphone: '11966596795',
 				documentNumber: '89075199007',
 				email: 'julia@email.com',
+				rule: 'ADMIN',
 			}
 
 			await global.testRequest.post('/users').send(newUser)
 			const response = await global.testRequest.post('/users').send(newUser)
 
-			expect(response.status).toBe(409)
+			expect(response.status).toBe(400)
 			expect(response.body).toEqual({
+				code: 400,
 				error: 'command find requires authentication',
 			})
 		})

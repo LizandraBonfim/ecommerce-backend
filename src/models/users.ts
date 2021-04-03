@@ -1,6 +1,7 @@
 import mongoose, { Model, Document, model, Schema } from 'mongoose'
 import { IUser } from '@src/interfaces/user'
 import AuthService from '@src/services/auth'
+import logger from '@src/logger'
 
 export enum CUSTOM_VALIDATION {
 	DUPLICATED = 'DUPLICATED',
@@ -22,7 +23,7 @@ const schema = new mongoose.Schema(
 			required: true,
 			unique: [true, 'Email must be unique'],
 		},
-		role: { type: String, required: true, default: 'CUSTOMER' },
+		rule: { type: String, required: true, default: 'CUSTOMER' },
 		address: { type: Schema.Types.ObjectId, ref: 'Address', required: false },
 		payment: { type: String, required: false }, //undefined
 		orders: { type: String, required: false }, //undefined
@@ -46,7 +47,7 @@ schema.pre<UserModel>('save', async function (): Promise<void> {
 		const hashedPassword = await AuthService.hashPassword(this.password)
 		this.password = hashedPassword
 	} catch (err) {
-		console.error(`Error hashing the password for the user ${err}`)
+		logger.error(`Error hashing the password for the user ${err}`)
 	}
 })
 

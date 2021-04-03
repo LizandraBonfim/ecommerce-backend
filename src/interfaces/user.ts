@@ -11,7 +11,7 @@ export interface IUser {
 
 	payment?: string //undefined
 	orders?: string //undefined
-	rule: CustomerRoleEnum
+	rule: CustomerRuleEnum
 	address?: IAddress
 }
 
@@ -29,7 +29,7 @@ export enum GenderEnum {
 	MASCULINO,
 }
 
-export enum RoleCustomerEnum {
+export enum RuleCustomerEnum {
 	ADMIN,
 	CUSTOMER,
 }
@@ -40,4 +40,4 @@ enum GenderCustomer {
 }
 
 export type CustomerGenderEnum = keyof typeof GenderCustomer
-export type CustomerRoleEnum = keyof typeof RoleCustomerEnum
+export type CustomerRuleEnum = keyof typeof RuleCustomerEnum

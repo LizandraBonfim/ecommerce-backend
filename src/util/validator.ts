@@ -1,16 +1,17 @@
-import { GenderEnum, CreateNewUser } from '@src/interfaces/user'
+import { GenderEnum, CreateNewUser, IUser } from '@src/interfaces/user'
+import { User } from '@src/models/users'
 
-export function validateFields(user: CreateNewUser): CreateNewUser {
+export function validateFields(user: IUser): IUser {
+	user.documentNumber = cleanDocumentNumber(user.documentNumber.trim())
+	user.cellphone = cleanPhoneNumber(user.cellphone.trim())
+
 	const name = !!user.name.trim()
 	const email = !!checkEmail(user.email.trim())
 	const password = !!checkPassword(user.password.trim())
 	const gender = !!(user.gender === GenderEnum.FEMININO || GenderEnum.MASCULINO)
-	const cellphone = !!checkTel(cleanPhoneNumber(user.cellphone.trim()))
-	const documentNumber =
-		user.documentNumber &&
-		!!checkCPF(cleanDocumentNumber(user.documentNumber.trim()))
-
-	console.log('user', user)
+	const cellphone = !!checkTel(user.cellphone)
+	const documentNumber = user.documentNumber && !!checkCPF(user.documentNumber)
+	const rule = !!(user.rule === 'ADMIN' || user.rule === 'CUSTOMER')
 
 	const validationResult = {
 		name,
@@ -19,6 +20,7 @@ export function validateFields(user: CreateNewUser): CreateNewUser {
 		gender,
 		cellphone,
 		documentNumber,
+		rule,
 	} as any
 
 	const keys = Object.keys(validationResult)
