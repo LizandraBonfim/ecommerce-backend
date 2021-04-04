@@ -1,7 +1,7 @@
 import { StormGlass } from '@src/clients/stormGlass'
 import { IAddress } from '@src/interfaces/address'
-import { Order } from '@src/interfaces/order'
-import { IUser } from '@src/interfaces/user'
+import { IOrder } from '@src/interfaces/order'
+import { IUser, UserStatusEnum } from '@src/interfaces/user'
 import { User } from '@src/models/users'
 import { TEXT_GERAL } from '@src/util/textGeral'
 import mongoose from 'mongoose'
@@ -22,6 +22,7 @@ export class UsersServices {
 		userId?: string,
 	) {
 		const userExists = await User.findOne({
+			$and: [{ status: { $ne: UserStatusEnum.INACTIVE } }],
 			$or: [
 				{ email: email ?? '' },
 				{ documentNumber: documentNumber ?? '' },
@@ -29,10 +30,12 @@ export class UsersServices {
 			],
 		})
 
+		console.log('userExists', userExists)
+
 		if (!userExists) {
 			throw {
 				code: 404,
-				error: TEXT_GERAL.USER_NOT_FOUND,
+				message: TEXT_GERAL.USER_NOT_FOUND,
 			}
 		}
 
@@ -40,10 +43,16 @@ export class UsersServices {
 	}
 
 	public static async addAddressId(userId: string, addressId: IAddress) {
-		if (!addressId) return
 		await User.findByIdAndUpdate(
 			{ _id: userId },
 			{ $set: { address: addressId } },
+		)
+	}
+
+	public static async deleteMyAccount(userId: string) {
+		await User.findByIdAndUpdate(
+			{ _id: userId },
+			{ $set: { status: UserStatusEnum.INACTIVE } },
 		)
 	}
 }

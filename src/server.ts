@@ -1,10 +1,13 @@
 import './util/module-alias'
 import { Server } from '@overnightjs/core'
 import express, { Application } from 'express'
-import { UsersController } from './controllers/usersController'
 import * as database from '@src/database'
+import swaggerUi from 'swagger-ui-express'
+import { UsersController } from './controllers/usersController'
 import { ProductsController } from './controllers/productsController'
+import { OrdersController } from './controllers/ordersController'
 import logger from './logger'
+
 export class SetupServer extends Server {
 	constructor(private port = 3000) {
 		super()
@@ -25,7 +28,8 @@ export class SetupServer extends Server {
 	private setupControllers(): void {
 		const user = new UsersController()
 		const product = new ProductsController()
-		this.addControllers([user, product])
+		const order = new OrdersController()
+		this.addControllers([user, product, order])
 	}
 
 	private async databaseSetup(): Promise<void> {

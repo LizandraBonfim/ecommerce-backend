@@ -9,6 +9,7 @@ const schema = new mongoose.Schema(
 		city: { type: String, required: true },
 		state: { type: String, required: true },
 		zipCode: { type: String, required: true },
+		status: { type: String, required: false, default: 'ACTIVE' },
 	},
 	{
 		toJSON: {

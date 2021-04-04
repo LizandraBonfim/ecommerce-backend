@@ -1,4 +1,4 @@
-import mongoose, { Model, Document, model, Schema } from 'mongoose'
+import mongoose, { Model, Document, Schema } from 'mongoose'
 import { IUser } from '@src/interfaces/user'
 import AuthService from '@src/services/auth'
 import logger from '@src/logger'
@@ -27,6 +27,7 @@ const schema = new mongoose.Schema(
 		address: { type: Schema.Types.ObjectId, ref: 'Address', required: false },
 		payment: { type: String, required: false }, //undefined
 		orders: { type: String, required: false }, //undefined
+		status: { type: String, required: false, default: 'ACTIVE' },
 	},
 	{
 		toJSON: {

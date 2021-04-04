@@ -5,4 +5,10 @@ export interface IAddress {
 	city: string
 	state: string
 	zipCode: string
+	status: AddressStatusEnum
+}
+
+export enum AddressStatusEnum {
+	ACTIVE = 'ACTIVE',
+	INACTIVE = 'INACTIVE',
 }

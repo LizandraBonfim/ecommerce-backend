@@ -14,6 +14,8 @@ const schema = new mongoose.Schema(
 		width: { type: Number, required: true },
 		variety: { type: Array, required: false },
 		createdByUser: { type: Schema.Types.ObjectId, ref: 'User', required: false },
+		status: { type: String, required: false, default: 'ACTIVE' },
+
 	},
 	{
 		toJSON: {

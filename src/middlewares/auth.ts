@@ -1,5 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
 import AuthService from '@src/services/auth'
+import { UsersServices } from '@src/services/usersServices'
+import { TEXT_GERAL } from '@src/util/textGeral'
 
 export function authMiddleware(
 	req: Partial<Request>,
@@ -11,8 +13,15 @@ export function authMiddleware(
 	try {
 		const claims = AuthService.decodedToken(token as string)
 
-		console.log({ claims })
 		req.context = { userId: claims.sub }
+		const user = UsersServices.getUser('', '', req.context?.userId)
+
+		if (!user) {
+			throw {
+				code: 404,
+				message: TEXT_GERAL.USER_NOT_FOUND,
+			}
+		}
 
 		next()
 	} catch (error) {

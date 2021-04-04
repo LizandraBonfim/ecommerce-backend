@@ -13,6 +13,7 @@ export interface IUser {
 	orders?: string //undefined
 	rule: CustomerRuleEnum
 	address?: IAddress
+	status: UserStatusEnum
 }
 
 export interface CreateNewUser {
@@ -37,6 +38,11 @@ export enum RuleCustomerEnum {
 enum GenderCustomer {
 	'FEMININO',
 	'MASCULINO',
+}
+
+export enum UserStatusEnum {
+	ACTIVE = 'ACTIVE',
+	INACTIVE = 'INACTIVE',
 }
 
 export type CustomerGenderEnum = keyof typeof GenderCustomer

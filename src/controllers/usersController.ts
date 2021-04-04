@@ -51,11 +51,13 @@ export class UsersController extends BaseController {
 		try {
 			const { email, password } = req.body
 
+			console.log('email, password', email, password)
+
 			const userExists = await UsersServices.getUser(email)
 
 			if (!(await AuthService.comparePassword(password, userExists.password))) {
 				return res.status(402).send({
-					code: 409,
+					code: 402,
 					error: TEXT_GERAL.PASSWORD_NOT_MATCH,
 				})
 			}
@@ -77,7 +79,7 @@ export class UsersController extends BaseController {
 			const userId = req.context?.userId
 			const userExists = await UsersServices.getUser('', '', userId)
 
-			res.send({ userExists })
+			res.send(userExists)
 		} catch (err) {
 			res.status(400).json({
 				code: 400,
@@ -110,6 +112,31 @@ export class UsersController extends BaseController {
 		} catch (error) {
 			res.status(401).json({
 				code: 401,
+				error: TEXT_GERAL.ADDRESS_NOT_SEND,
+			})
+		}
+	}
+
+	@Post('deleteMyAccount')
+	@Middleware(authMiddleware)
+	public async deleteMyAccount(
+		req: Request,
+		res: Response,
+	): Promise<Response | any> {
+		try {
+			const userId = req.context?.userId
+
+			if (!userId) return
+
+			await UsersServices.deleteMyAccount(userId)
+
+			res.status(200).send({
+				code: 200,
+				message: TEXT_GERAL.USER_DELETE_MY_ACCOUNT,
+			})
+		} catch (error) {
+			res.status(400).json({
+				code: 400,
 				error: TEXT_GERAL.ADDRESS_NOT_SEND,
 			})
 		}

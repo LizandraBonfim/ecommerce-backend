@@ -1,5 +1,5 @@
 import { IAddress } from '@src/interfaces/address'
-import { IProduct, IVariety } from '@src/interfaces/product'
+import { IVariety, ProductStatusEnum } from '@src/interfaces/product'
 import { Product } from '@src/models/products'
 
 import { TEXT_GERAL } from '@src/util/textGeral'
@@ -33,9 +33,14 @@ export class ProductsServices {
 	}
 
 	public static async deleteProduct(id: string) {
-		const product = await Product.deleteOne({
-			_id: id,
-		})
+		const product = await Product.updateOne(
+			{
+				_id: id,
+			},
+			{
+				status: ProductStatusEnum.INACTIVE,
+			},
+		)
 
 		if (!product) {
 			throw {
@@ -60,10 +65,6 @@ export class ProductsServices {
 		length?: number,
 		variety?: IVariety[],
 	) {
-		console.log('productUpdate', {
-			id,
-		})
-
 		const product = await Product.updateOne(
 			{ _id: id },
 			{
