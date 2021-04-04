@@ -21,7 +21,6 @@ export class UsersServices {
 		documentNumber?: string,
 		userId?: string,
 	) {
-		console.log('tttt', { email, documentNumber, userId })
 		const userExists = await User.findOne({
 			$or: [
 				{ email: email ?? '' },
@@ -29,8 +28,6 @@ export class UsersServices {
 				{ _id: mongoose.Types.ObjectId(userId) ?? '' },
 			],
 		})
-
-		console.log('userExists', userExists)
 
 		if (!userExists) {
 			throw {

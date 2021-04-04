@@ -15,7 +15,7 @@ export interface IProduct {
 	createdByUser: IUser
 }
 
-interface IVariety {
+export interface IVariety {
 	size?: number
 	color?: number
 	other?: any

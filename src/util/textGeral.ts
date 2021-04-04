@@ -7,4 +7,9 @@ export const TEXT_GERAL = {
 
 	ADDRESS_SEND: 'Endereço cadastrado!',
 	ADDRESS_NOT_SEND: 'Endereço não cadastrado!',
+
+	PRODUCT_NOT_FOUND: 'Produto não encontrado',
+	PRODUCT_CREATE: 'Produto cadastrado com sucesso',
+	PRODUCT_DELETE: 'Produto deletado com sucesso',
+	PRODUCT_UPDATE: 'Produto atualizado com sucesso',
 }

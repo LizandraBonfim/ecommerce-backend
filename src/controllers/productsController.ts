@@ -1,10 +1,20 @@
 import { Request, Response } from 'express'
-import { Controller, Middleware, Post } from '@overnightjs/core'
+import {
+	Controller,
+	Middleware,
+	Post,
+	Get,
+	Delete,
+	Put,
+} from '@overnightjs/core'
 import { IProduct } from '@src/interfaces/product'
 import { Product } from '@src/models/products'
 import { BaseController } from '.'
 import { UsersServices } from '@src/services/usersServices'
 import { authMiddlewareAdmin } from '@src/middlewares/authAdmin'
+import { authMiddleware } from '@src/middlewares/auth'
+import { ProductsServices } from '@src/services/productsServices'
+import { TEXT_GERAL } from '@src/util/textGeral'
 
 @Controller('products')
 export class ProductsController extends BaseController {
@@ -16,8 +26,6 @@ export class ProductsController extends BaseController {
 
 			const userExists = await UsersServices.getUser('', '', userId)
 
-			console.log('ProductsController', userExists)
-
 			let product: IProduct = req.body
 			product.createdByUser = userExists.id
 
@@ -26,11 +34,90 @@ export class ProductsController extends BaseController {
 			await newProduct.save()
 
 			res.status(201).json({
-				code: 401,
-				error: 'Produto cadastrado com sucesso',
+				code: 201,
+				message: TEXT_GERAL.PRODUCT_CREATE,
 			})
 		} catch (error) {
-			res.status(401).json(error.message)
+			res.status(401).json({ code: 401, error: error.message })
+		}
+	}
+
+	@Get('detail/:productId')
+	// @Middleware(authMiddleware)
+	public async getProduct(
+		req: Request,
+		res: Response,
+	): Promise<Response | any> {
+		try {
+			const { productId } = req.params
+
+			const product = await ProductsServices.getProduct(productId)
+			res.status(200).json(product)
+		} catch (error) {
+			res.status(401).json({ code: 401, error: error.message })
+		}
+	}
+
+	@Delete('delete/:productId')
+	@Middleware(authMiddlewareAdmin)
+	public async delProduct(
+		req: Request,
+		res: Response,
+	): Promise<Response | any> {
+		try {
+			const { productId } = req.params
+
+			await ProductsServices.deleteProduct(productId)
+			res.status(200).json({
+				code: 200,
+				message: TEXT_GERAL.PRODUCT_DELETE,
+			})
+		} catch (error) {
+			res.status(401).json({ code: 401, error: error.message })
+		}
+	}
+
+	@Put('update/:productId')
+	@Middleware(authMiddlewareAdmin)
+	public async updateProduct(
+		req: Request,
+		res: Response,
+	): Promise<Response | any> {
+		try {
+			const {
+				name,
+				description,
+				photo,
+				price,
+				stock,
+				weight,
+				height,
+				width,
+				length,
+				variety,
+			}: IProduct = req.body
+			const { productId } = req.params
+
+			await ProductsServices.updateProduct(
+				productId,
+				name,
+				description,
+				photo,
+				price,
+				stock,
+				weight,
+				height,
+				width,
+				length,
+				variety,
+			)
+
+			res.status(200).json({
+				code: 200,
+				message: TEXT_GERAL.PRODUCT_UPDATE,
+			})
+		} catch (error) {
+			res.status(401).json({ code: 401, error: error.message })
 		}
 	}
 }
