@@ -4,22 +4,22 @@ import { differenceInDays } from 'date-fns'
 
 export class OrdersServices {
 	public static validate(order: IOrder): IOrder {
-		const price = !!Number(order.price)
-		const deliveryAddress = !!order.deliveryAddress
-		const quantity = !!Number(order.quantity)
-		const productId = !!order.productId
-		const userId = !!order.userId
+		const total = !!Number(order.total)
+		const addressId = !!order.addressId
+		const payment = !!order.payment
+		const itemsProducts = !!order.itemsProducts
+		const clientId = !!order.clientId
 		const date =
 			differenceInDays(new Date(order.dateDelivery), new Date()) > 0
 				? true
 				: false
 
 		const validationResult = {
-			price,
-			deliveryAddress,
-			productId,
-			quantity,
-			userId,
+			total,
+			addressId,
+			itemsProducts,
+			payment,
+			clientId,
 			date,
 		} as any
 

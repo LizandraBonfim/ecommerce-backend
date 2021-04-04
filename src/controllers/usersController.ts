@@ -1,4 +1,4 @@
-import { Controller, Get, Middleware, Post } from '@overnightjs/core'
+import { Controller, Get, Middleware, Post, Put } from '@overnightjs/core'
 import { User } from '@src/models/users'
 import { TEXT_GERAL } from '@src/util/textGeral'
 import { Request, Response } from 'express'
@@ -80,6 +80,30 @@ export class UsersController extends BaseController {
 			const userExists = await UsersServices.getUser('', '', userId)
 
 			res.send(userExists)
+		} catch (err) {
+			res.status(400).json({
+				code: 400,
+				error: TEXT_GERAL.NOT_AUTHORIZATION,
+			})
+		}
+	}
+
+	@Put('update')
+	@Middleware(authMiddleware)
+	public async updateProfile(
+		req: Request,
+		res: Response,
+	): Promise<Response | any> {
+		try {
+			const userId = req.context?.userId
+			const userExists = await UsersServices.getUser('', '', userId)
+
+			const updated = await UsersServices.updateMyAccount(
+				userExists.id,
+				userExists,
+			)
+
+			res.status(201).send(updated)
 		} catch (err) {
 			res.status(400).json({
 				code: 400,

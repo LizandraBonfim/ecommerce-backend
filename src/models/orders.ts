@@ -1,19 +1,44 @@
-import { IOrder } from '@src/interfaces/order'
+import { IOrder, PaymentType } from '@src/interfaces/order'
 import mongoose, { Schema, Document, Model } from 'mongoose'
+
+const Product = {
+	idProduct: {
+		type: Schema.Types.ObjectId,
+		ref: 'Product',
+		required: true,
+	},
+	quantity: {
+		type: Number,
+		required: true,
+	},
+	price: {
+		type: Number,
+		required: true,
+	},
+}
+
+const Payment = {
+	paymentType: {
+		type: PaymentType,
+		required: true,
+	},
+	quota: { type: Number, required: true },
+	interest: { type: Number, required: true },
+}
 
 const schema = new mongoose.Schema(
 	{
-		price: { type: Number, required: true },
-		productId: { type: Schema.Types.ObjectId, ref: 'Product', required: true },
-		userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-		deliveryAddress: {
+		total: { type: Number, required: true },
+		itemsProducts: { type: [Product], required: true },
+		clientId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+		addressId: {
 			type: Schema.Types.ObjectId,
 			ref: 'Address',
 			required: true,
 		},
-		quantity: { type: Number, required: true },
-		status: { type: String, required: false, default: 'ACTIVE' },
 		dateDelivery: { type: Date, required: true },
+		payment: { type: Payment, required: true },
+		status: { type: String, required: false, default: 'ACTIVE' },
 	},
 	{
 		toJSON: {

@@ -30,8 +30,6 @@ export class UsersServices {
 			],
 		})
 
-		console.log('userExists', userExists)
-
 		if (!userExists) {
 			throw {
 				code: 404,
@@ -54,5 +52,21 @@ export class UsersServices {
 			{ _id: userId },
 			{ $set: { status: UserStatusEnum.INACTIVE } },
 		)
+	}
+
+	public static async updateMyAccount(userId: string, user: IUser) {
+		const newUser = await User.findByIdAndUpdate(
+			{ _id: userId },
+			{
+				$set: {
+					cellphone: user.cellphone,
+					email: user.email,
+					name: user.name,
+					password: user.password,
+				},
+			},
+		)
+
+		return newUser
 	}
 }
