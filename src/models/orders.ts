@@ -38,7 +38,7 @@ const schema = new mongoose.Schema(
 		},
 		dateDelivery: { type: Date, required: true },
 		payment: { type: Payment, required: true },
-		status: { type: String, required: false, default: 'ACTIVE' },
+		status: { type: String, required: false, default: 'PENDING' },
 	},
 	{
 		toJSON: {

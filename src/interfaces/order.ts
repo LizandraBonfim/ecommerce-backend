@@ -1,18 +1,21 @@
+import { Types } from 'mongoose';
 import { IAddress } from './address'
 
 export interface IOrder {
 	total: number
 	itemsProducts: ItemsOrder[]
-	clientId: string
-	addressId: IAddress
+	clientId: Types.ObjectId
+	addressId: Types.ObjectId
 	dateDelivery: Date
 	payment: Payment
 	status: OrderStatusEnum
 }
 
 export enum OrderStatusEnum {
-	ACTIVE = 'ACTIVE',
-	INACTIVE = 'INACTIVE',
+	PENDING = 'PENDING',
+	CANCELED = 'CANCELED',
+	APPROVED = 'APPROVED',
+	RECUSED = 'RECUSED',
 }
 
 export interface ItemsOrder {

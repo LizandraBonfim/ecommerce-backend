@@ -1,6 +1,8 @@
-import { IOrder } from '@src/interfaces/order'
+import { IOrder, OrderStatusEnum } from '@src/interfaces/order'
 import { Order } from '@src/models/orders'
+import { TEXT_GERAL } from '@src/util/textGeral'
 import { differenceInDays } from 'date-fns'
+import mongoose from 'mongoose'
 
 export class OrdersServices {
 	public static validate(order: IOrder): IOrder {
@@ -52,5 +54,27 @@ export class OrdersServices {
 			}
 
 		return orderNew
+	}
+
+	public static async cancel(id: string, userId: string) {
+		const order = await Order.updateOne(
+			{
+				$and: [
+					{ _id: id },
+					{ status: OrderStatusEnum.PENDING },
+					{ clientId: userId },
+				],
+			},
+			{ status: OrderStatusEnum.CANCELED },
+			{ new: true },
+		)
+
+		if (!order)
+			throw {
+				code: 402,
+				message: TEXT_GERAL.ORDER_NOT_CANCEL,
+			}
+
+		return order
 	}
 }

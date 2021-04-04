@@ -25,4 +25,22 @@ export class OrdersController {
 			res.status(402).json({ code: 402, error: error.message })
 		}
 	}
+
+	@Post('cancel/:id')
+	@Middleware(authMiddleware)
+	public async cancel(req: Request, res: Response): Promise<Response | any> {
+		try {
+			const userId = req.context?.userId as string
+			const { id } = req.params
+
+			await OrdersServices.cancel(id, userId)
+
+			res.status(201).send({
+				code: 201,
+				message: TEXT_GERAL.ORDER_CANCEL,
+			})
+		} catch (error) {
+			res.status(402).json({ code: 402, error: error.message })
+		}
+	}
 }
