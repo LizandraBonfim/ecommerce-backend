@@ -43,4 +43,29 @@ export class OrdersController {
 			res.status(402).json({ code: 402, error: error.message })
 		}
 	}
+
+	@Get('history')
+	@Middleware(authMiddleware)
+	public async listOrderByUser(
+		req: Request,
+		res: Response,
+	): Promise<Response | any> {
+		try {
+			const userId = req.context?.userId as string
+			const {
+				page,
+			}: {
+				page: number
+			} = req.body
+
+			const orders = await OrdersServices.listOrderByUser(userId, page)
+
+			res.status(200).send(orders)
+		} catch (error) {
+			res.status(400).json({
+				code: 400,
+				error: TEXT_GERAL.ADDRESS_NOT_SEND,
+			})
+		}
+	}
 }

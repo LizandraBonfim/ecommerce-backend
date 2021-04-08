@@ -1,5 +1,7 @@
 import { IOrder, PaymentType } from '@src/interfaces/order'
-import mongoose, { Schema, Document, Model } from 'mongoose'
+import { IMongoosePaginate, MongoDocument } from '@src/services/paginate'
+import mongoose, { Schema, Document, Model, model } from 'mongoose'
+const mongoosePaginate = require('mongoose-paginate-v2')
 
 const Product = {
 	idProduct: {
@@ -50,6 +52,20 @@ const schema = new mongoose.Schema(
 )
 
 schema.set('timestamps', true)
+schema.plugin(mongoosePaginate)
 
 interface OrderModel extends Omit<IOrder, '_id'>, Document {}
 export const Order: Model<OrderModel> = mongoose.model('Order', schema)
+
+type OrderModelWithPagination = Model<MongoDocument<OrderModel>, {}> &
+	IMongoosePaginate<IOrder>
+
+const orderPag = model<MongoDocument<OrderModel>>(
+	'Order',
+	schema,
+	'order',
+) as OrderModelWithPagination
+
+export default orderPag
+
+module.exports = model('Order', schema)

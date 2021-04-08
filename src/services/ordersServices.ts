@@ -1,5 +1,5 @@
 import { IOrder, OrderStatusEnum } from '@src/interfaces/order'
-import { Order } from '@src/models/orders'
+import orderPag, { Order } from '@src/models/orders'
 import { TEXT_GERAL } from '@src/util/textGeral'
 import { differenceInDays } from 'date-fns'
 import mongoose from 'mongoose'
@@ -76,5 +76,18 @@ export class OrdersServices {
 			}
 
 		return order
+	}
+
+	public static async listOrderByUser(userId: string, page: number) {
+		const options = { page: page, limit: 10, lean: true }
+
+		const counterPage = await orderPag.paginate(
+			{
+				clientId: userId,
+			},
+			options,
+		)
+
+		return counterPage
 	}
 }
