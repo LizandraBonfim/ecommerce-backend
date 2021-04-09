@@ -26,8 +26,8 @@ export interface CreateNewUser {
 }
 
 export enum GenderEnum {
-	FEMININO,
-	MASCULINO,
+	FEMININO = 'FEMININO',
+	MASCULINO = 'MASCULINO',
 }
 
 export enum RuleCustomerEnum {
@@ -35,15 +35,9 @@ export enum RuleCustomerEnum {
 	CUSTOMER,
 }
 
-enum GenderCustomer {
-	'FEMININO',
-	'MASCULINO',
-}
-
 export enum UserStatusEnum {
 	ACTIVE = 'ACTIVE',
 	INACTIVE = 'INACTIVE',
 }
 
-export type CustomerGenderEnum = keyof typeof GenderCustomer
 export type CustomerRuleEnum = keyof typeof RuleCustomerEnum
