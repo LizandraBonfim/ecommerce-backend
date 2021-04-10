@@ -120,4 +120,24 @@ export class ProductsController extends BaseController {
 			res.status(401).json({ code: 401, error: error.message })
 		}
 	}
+
+	@Get('list')
+	public async listProduct(
+		req: Request,
+		res: Response,
+	): Promise<Response | any> {
+		try {
+			const {
+				page,
+			}: {
+				page: number
+			} = req.body
+			const productList = await ProductsServices.listProduct(page)
+
+			console.log({ productList })
+			res.status(200).send(productList)
+		} catch (error) {
+			res.status(500).json({ code: 500, error: error.message })
+		}
+	}
 }

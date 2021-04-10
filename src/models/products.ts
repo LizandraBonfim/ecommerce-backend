@@ -1,6 +1,7 @@
 import { IProduct } from '@src/interfaces/product'
 import { IMongoosePaginate, MongoDocument } from '@src/services/paginate'
 import mongoose, { Model, Document, Schema, model } from 'mongoose'
+import mongoosePaginate from 'mongoose-paginate-v2'
 
 const schema = new mongoose.Schema(
 	{
@@ -27,6 +28,8 @@ const schema = new mongoose.Schema(
 	},
 )
 schema.set('timestamps', true)
+schema.plugin(mongoosePaginate)
+
 interface ProductModel extends Omit<IProduct, '_id'>, Document {}
 export const Product: Model<ProductModel> = mongoose.model('Product', schema)
 

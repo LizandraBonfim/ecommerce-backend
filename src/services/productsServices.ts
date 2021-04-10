@@ -1,6 +1,6 @@
 import { IAddress } from '@src/interfaces/address'
+import productPag, { Product } from '@src/models/products'
 import { IVariety, ProductStatusEnum } from '@src/interfaces/product'
-import { Product } from '@src/models/products'
 
 import { TEXT_GERAL } from '@src/util/textGeral'
 import mongoose from 'mongoose'
@@ -92,5 +92,28 @@ export class ProductsServices {
 		}
 
 		return product
+	}
+
+	public static async listProduct(page: number) {
+		const options = { page: page, limit: 10, lean: true }
+
+		console.log('options', options)
+
+		const products = await productPag.paginate(
+			{
+				status: 'ACTIVE',
+			},
+			options,
+		)
+
+		if (!products) {
+			throw {
+				code: 500,
+				error: 'Erro no servidor',
+			}
+		}
+
+		console.log('products', products)
+		return products
 	}
 }
