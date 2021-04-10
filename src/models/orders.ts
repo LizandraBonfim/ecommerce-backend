@@ -1,7 +1,8 @@
 import { IOrder, PaymentType } from '@src/interfaces/order'
 import { IMongoosePaginate, MongoDocument } from '@src/services/paginate'
 import mongoose, { Schema, Document, Model, model } from 'mongoose'
-const mongoosePaginate = require('mongoose-paginate-v2')
+import mongoosePaginate from 'mongoose-paginate-v2'
+
 
 const Product = {
 	idProduct: {
