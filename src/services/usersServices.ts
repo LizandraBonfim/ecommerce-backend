@@ -1,6 +1,4 @@
-import { StormGlass } from '@src/clients/stormGlass'
 import { IAddress } from '@src/interfaces/address'
-import { IOrder } from '@src/interfaces/order'
 import { IUser, UserStatusEnum } from '@src/interfaces/user'
 import { User } from '@src/models/users'
 import { TEXT_GERAL } from '@src/util/textGeral'
@@ -68,5 +66,24 @@ export class UsersServices {
 		)
 
 		return newUser
+	}
+
+	public static async createPayment(paymentHead: string) {
+		const newPayment = User.updateOne({ payment: paymentHead })
+
+		return newPayment
+	}
+
+	public static async createPaymentHead(userId: string, paymentId: string) {
+		await User.updateOne({ paymentHead: paymentId })
+
+		const paymentHistory = await User.findOne({
+			_id: userId,
+			payment: paymentId,
+		})
+
+		if (!paymentHistory) {
+			await this.createPayment(paymentId)
+		}
 	}
 }

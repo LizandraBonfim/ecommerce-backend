@@ -25,7 +25,12 @@ const schema = new mongoose.Schema(
 		},
 		rule: { type: String, required: true, default: 'CUSTOMER' },
 		address: { type: Schema.Types.ObjectId, ref: 'Address', required: false },
-		payment: { type: String, required: false }, //undefined
+		payment: { type: [Schema.Types.ObjectId], ref: 'Payment', required: false }, //undefined
+		paymentHead: {
+			type: Schema.Types.ObjectId,
+			ref: 'Payment',
+			required: false,
+		},
 		orders: { type: String, required: false }, //undefined
 		status: { type: String, required: false, default: 'ACTIVE' },
 	},

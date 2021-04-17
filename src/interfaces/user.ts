@@ -10,6 +10,7 @@ export interface IUser {
 	email: string
 
 	payment?: string //undefined
+	paymentHead?: string
 	orders?: string //undefined
 	rule: CustomerRuleEnum
 	address?: IAddress

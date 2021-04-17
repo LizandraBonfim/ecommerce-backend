@@ -1,4 +1,9 @@
-import { CreateNewUser, GenderEnum, IUser } from '@src/interfaces/user'
+import {
+	CreateNewUser,
+	GenderEnum,
+	IUser,
+	UserStatusEnum,
+} from '@src/interfaces/user'
 import { User } from '@src/models/users'
 import AuthService from '@src/services/auth'
 import { checkPassword, validateFields } from '@src/util/validator'
@@ -15,23 +20,28 @@ describe('Create Account functional tests', () => {
 				password: 'Portal123!',
 				gender: GenderEnum.FEMININO,
 				cellphone: '11966596795',
-				documentNumber: '27305187046',
-				email: 'ju@email.com',
+				documentNumber: '27305187080',
+				email: 'johndoe@email.com',
 				rule: 'ADMIN',
+				status: UserStatusEnum.ACTIVE,
 			}
 
-			const newUser = validateFields(user)
+			// const newUser = validateFields(user)
 
-			const response = await global.testRequest.post('/users').send(newUser)
+			console.log('newUser', user)
+
+			const response = await global.testRequest.post('/users').send(user)
 
 			console.log('responseeeeeeeee', response.status)
 			expect(response.status).toBe(201)
+
 			await expect(
-				AuthService.comparePassword(newUser.password, response.body.password),
+				AuthService.comparePassword(user.password, response.body.password),
 			).resolves.toBeTruthy()
+
 			expect(response.body).toEqual(
 				expect.objectContaining({
-					...newUser,
+					...user,
 					...{ password: expect.any(String) },
 				}),
 			)
@@ -46,6 +56,7 @@ describe('Create Account functional tests', () => {
 				email: 'julia2@email.com',
 				documentNumber: '',
 				rule: 'CUSTOMER',
+				status: UserStatusEnum.ACTIVE,
 			}
 
 			const newUser = validateFields(user)
@@ -65,9 +76,9 @@ describe('Create Account functional tests', () => {
 			const newUser = {
 				name: 'Julia',
 				password: 'Portal123!',
-				gender: "FEMININO",
+				gender: 'FEMININO',
 				cellphone: '11966596795',
-				documentNumber: '89075199007',
+				documentNumber: '89075199009',
 				email: 'julia@email.com',
 				rule: 'ADMIN',
 			}

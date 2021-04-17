@@ -12,7 +12,7 @@ import { IAddress } from '@src/interfaces/address'
 import { Address } from '@src/models/address'
 import { UsersServices } from '../services/usersServices'
 @Controller('users')
-export class UsersController extends BaseController {
+export class UsersController {
 	@Post('')
 	public async create(req: Request, res: Response): Promise<Response | any> {
 		try {
@@ -20,10 +20,14 @@ export class UsersController extends BaseController {
 
 			const validate = validateFields(user)
 
+			console.log({ validate })
+
 			const userExists = await User.findOne({
 				email: validate.email,
 				documentNumber: validate.documentNumber,
 			})
+
+			console.log('userExists', userExists)
 
 			if (userExists) {
 				throw {
@@ -33,6 +37,8 @@ export class UsersController extends BaseController {
 			}
 
 			const newUser = new User(validate)
+
+			console.log('newUser', newUser)
 
 			const result = await newUser.save()
 
@@ -131,6 +137,7 @@ export class UsersController extends BaseController {
 			await UsersServices.addAddressId(userExists.id, sendAdress.id)
 
 			res.status(201).send({
+				code: 201,
 				message: TEXT_GERAL.ADDRESS_SEND,
 			})
 		} catch (error) {
@@ -148,9 +155,7 @@ export class UsersController extends BaseController {
 		res: Response,
 	): Promise<Response | any> {
 		try {
-			const userId = req.context?.userId
-
-			if (!userId) return
+			const userId = req.context?.userId as string
 
 			await UsersServices.deleteMyAccount(userId)
 
@@ -165,4 +170,6 @@ export class UsersController extends BaseController {
 			})
 		}
 	}
+
+
 }

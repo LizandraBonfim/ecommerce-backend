@@ -7,6 +7,7 @@ import { UsersController } from './controllers/usersController'
 import { ProductsController } from './controllers/productsController'
 import { OrdersController } from './controllers/ordersController'
 import logger from './logger'
+import { PaymentController } from './controllers/paymentController'
 
 export class SetupServer extends Server {
 	constructor(private port = 3000) {
@@ -29,7 +30,8 @@ export class SetupServer extends Server {
 		const user = new UsersController()
 		const product = new ProductsController()
 		const order = new OrdersController()
-		this.addControllers([user, product, order])
+		const payment = new PaymentController()
+		this.addControllers([user, product, order, payment])
 	}
 
 	private async databaseSetup(): Promise<void> {
