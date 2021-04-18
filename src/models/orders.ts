@@ -2,8 +2,6 @@ import { IOrder, PaymentType } from '@src/interfaces/order'
 import { IMongoosePaginate, MongoDocument } from '@src/services/paginate'
 import mongoose, { Schema, Document, Model, model } from 'mongoose'
 import mongoosePaginate from 'mongoose-paginate-v2'
-
-
 const Product = {
 	idProduct: {
 		type: Schema.Types.ObjectId,
@@ -42,6 +40,11 @@ const schema = new mongoose.Schema(
 		dateDelivery: { type: Date, required: true },
 		payment: { type: Payment, required: true },
 		status: { type: String, required: false, default: 'PENDING' },
+		evaluation: {
+			type: [Schema.Types.ObjectId],
+			ref: 'Evaluation',
+			required: false,
+		},
 	},
 	{
 		toJSON: {
