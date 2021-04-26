@@ -1,4 +1,4 @@
-import { Types } from 'mongoose';
+import { Types } from 'mongoose'
 import { IAddress } from './address'
 
 export interface IOrder {
@@ -16,6 +16,8 @@ export enum OrderStatusEnum {
 	CANCELED = 'CANCELED',
 	APPROVED = 'APPROVED',
 	RECUSED = 'RECUSED',
+	DELIVERED = 'DELIVERED',
+	CARRIER = 'CARRIER',
 }
 
 export interface ItemsOrder {

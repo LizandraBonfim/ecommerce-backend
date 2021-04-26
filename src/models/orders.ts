@@ -23,8 +23,8 @@ const Payment = {
 		type: PaymentType,
 		required: true,
 	},
-	quota: { type: Number, required: true },
-	interest: { type: Number, required: true },
+	quota: { type: Number, required: true, default: 1 },
+	interest: { type: Number, required: true, default: 0 },
 }
 
 const schema = new mongoose.Schema(
@@ -40,11 +40,6 @@ const schema = new mongoose.Schema(
 		dateDelivery: { type: Date, required: true },
 		payment: { type: Payment, required: true },
 		status: { type: String, required: false, default: 'PENDING' },
-		evaluation: {
-			type: [Schema.Types.ObjectId],
-			ref: 'Evaluation',
-			required: false,
-		},
 	},
 	{
 		toJSON: {

@@ -13,14 +13,18 @@ export class OrdersController {
 			const userId = req.context?.userId
 			const order = req.body
 
-			const orderValidator = OrdersServices.validate({ ...order, userId })
+			debugger
 
-			await OrdersServices.create(orderValidator)
-
-			res.status(201).send({
-				code: 201,
-				message: TEXT_GERAL.ORDER_CREATE,
+			const orderValidator = OrdersServices.validate({
+				...order,
+				clientId: userId,
 			})
+
+			const newOrder = await OrdersServices.create(orderValidator)
+
+			console.log('newOrder', newOrder)
+
+			res.status(201).send(newOrder)
 		} catch (error) {
 			res.status(402).json({ code: 402, error: error.message })
 		}
@@ -35,12 +39,12 @@ export class OrdersController {
 
 			await OrdersServices.cancel(id, userId)
 
-			res.status(201).send({
+			res.status(201).json({
 				code: 201,
 				message: TEXT_GERAL.ORDER_CANCEL,
 			})
 		} catch (error) {
-			res.status(402).json({ code: 402, error: error.message })
+			res.status(404).json({ code: 404, error: error.message })
 		}
 	}
 

@@ -1,7 +1,7 @@
 import { IOrder, OrderStatusEnum } from '@src/interfaces/order'
 import orderPag, { Order } from '@src/models/orders'
 import { TEXT_GERAL } from '@src/util/textGeral'
-import { differenceInDays } from 'date-fns'
+import { addDays, differenceInDays } from 'date-fns'
 import mongoose from 'mongoose'
 
 export class OrdersServices {
@@ -11,10 +11,7 @@ export class OrdersServices {
 		const payment = !!order.payment
 		const itemsProducts = !!order.itemsProducts
 		const clientId = !!order.clientId
-		const date =
-			differenceInDays(new Date(order.dateDelivery), new Date()) > 0
-				? true
-				: false
+		const date = (order.dateDelivery = addDays(new Date(), 10))
 
 		const validationResult = {
 			total,
@@ -43,10 +40,13 @@ export class OrdersServices {
 		return order
 	}
 	public static async create(order: IOrder) {
+		console.log('order', order)
+
 		const newOrder = new Order(order)
+
 		const orderNew = await newOrder.save()
 
-		console.log('order', order)
+		console.log('orderrerere', order)
 		if (!orderNew)
 			throw {
 				code: 402,
@@ -69,9 +69,11 @@ export class OrdersServices {
 			{ new: true },
 		)
 
+		console.log('order', order)
+
 		if (!order)
 			throw {
-				code: 402,
+				code: 404,
 				message: TEXT_GERAL.ORDER_NOT_CANCEL,
 			}
 

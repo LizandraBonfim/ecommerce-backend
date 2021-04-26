@@ -1,21 +1,22 @@
 {
-    "version": "0.2.0",
-    "configurations": [
-
-      {
-        "name": "Jest",
-        "type": "node",
-        "request": "launch",
-        "runtimeArgs": [
-          "--inspect-brk",
-          "${workspaceRoot}/node_modules/.bin/jest",
-          "--runInBand",          
-          "--config",
-          "${workspaceRoot}/test/jest.config.js"          
-        ],
-        "console": "integratedTerminal",
-        "internalConsoleOptions": "neverOpen",
-        "port": 9229
-      }
-    ]
-  }
+	"version": "0.2.0",
+	"configurations": [
+		{
+			// "name": "Jest",
+      "name": "Debug File",
+			"type": "node",
+			"request": "launch",
+			// "program": "${file}",
+			// "runtimeArgs": [
+			// 	"--inspect-brk",
+			// 	"${workspaceRoot}/node_modules/.bin/jest",
+			// 	"--runInBand",
+			// 	"--config",
+			// 	"${workspaceRoot}/test/jest.config.js"
+			// ],
+			// "console": "integratedTerminal",
+			// "internalConsoleOptions": "neverOpen",
+			// "port": 9229
+		}
+	]
+}

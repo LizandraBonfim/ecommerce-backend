@@ -14,6 +14,7 @@ export interface IProduct {
 	variety?: IVariety[] //variedades
 	createdByUser: IUser
 	status: ProductStatusEnum
+	evaluation: string[]
 }
 
 export interface IVariety {

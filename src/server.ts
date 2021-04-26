@@ -31,7 +31,10 @@ export class SetupServer extends Server {
 		const product = new ProductsController()
 		const order = new OrdersController()
 		const payment = new PaymentController()
-		this.addControllers([user, product, order, payment])
+		// const evaluation = new EvaluationController()
+		this.addControllers([user, product, order, payment, 
+			// evaluation
+		])
 	}
 
 	private async databaseSetup(): Promise<void> {

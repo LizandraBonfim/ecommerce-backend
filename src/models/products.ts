@@ -15,9 +15,17 @@ const schema = new mongoose.Schema(
 		length: { type: Number, required: true },
 		width: { type: Number, required: true },
 		variety: { type: Array, required: false },
-		createdByUser: { type: Schema.Types.ObjectId, ref: 'User', required: false },
+		createdByUser: {
+			type: Schema.Types.ObjectId,
+			ref: 'User',
+			required: false,
+		},
 		status: { type: String, required: false, default: 'ACTIVE' },
-
+		evaluation: {
+			type: [Schema.Types.ObjectId],
+			ref: 'Evaluation',
+			required: false,
+		},
 	},
 	{
 		toJSON: {
