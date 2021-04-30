@@ -3,12 +3,12 @@ export interface IEvaluation {
 	productId: string
 	comment: string
 	userId: string
-	image?: string
-	evaluationValue: string
-	status: IStatusEvaluation
+	image?: string[]
+	evaluationValue: number
+	status?: StatusEvaluationEnum
 }
 
-export enum IStatusEvaluation {
+export enum StatusEvaluationEnum {
 	ACTIVE = 'ACTIVE',
 	INACTIVE = 'INACTIVE',
 }

@@ -21,6 +21,7 @@ export interface IVariety {
 	size?: number
 	color?: number
 	other?: any
+	image?: string[]
 }
 
 export enum ProductStatusEnum {

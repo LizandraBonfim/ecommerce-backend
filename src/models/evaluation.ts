@@ -1,16 +1,16 @@
-import { IEvaluation } from '@src/interfaces/evaluation'
-import { IMongoosePaginate, MongoDocument } from '@src/services/paginate'
 import mongoose, { Model, Document, Schema, model } from 'mongoose'
 import mongoosePaginate from 'mongoose-paginate-v2'
+import { IEvaluation } from '@src/interfaces/evaluation'
+import { IMongoosePaginate, MongoDocument } from '@src/services/paginate'
 
 const schema = new mongoose.Schema(
 	{
 		productId: { type: Schema.Types.ObjectId, ref: 'Product', required: true },
 		comment: { type: String, required: true },
 		userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-		image: { type: String, required: false },
-		evaluationValue: { type: String, required: true },
-		status: { type: String, required: false, default: 'ACTIVE' },
+		image: { type: [String], required: false },
+		evaluationValue: { type: Number, required: true },
+		status: { type: String, default: 'ACTIVE', required: false  },
 	},
 	{
 		toJSON: {
@@ -40,4 +40,4 @@ const evaluationPag = model<MongoDocument<EvaluationModel>>(
 
 export default evaluationPag
 
-module.exports = model('Evaluation', schema)
+//module.exports = model('Evaluation', schema)

@@ -1,6 +1,6 @@
 {
 	"App": {
-		"port": 3000,
+		"port": 3333,
 		"database": {
 			"mongoUrl": "mongodb://mongo:!123Senha@localhost/admin"
 		},

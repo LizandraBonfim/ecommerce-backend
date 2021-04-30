@@ -15,6 +15,7 @@ export const TEXT_GERAL = {
 	PRODUCT_UPDATE: 'Produto atualizado com sucesso',
 
 	ORDER_CREATE: 'Itens adicionados ao carrinho',
+	ORDER_NOT_CREATE: 'Não foi possivel realizar os pedidos',
 	ORDER_CANCEL: 'Pedido cancelado',
 	ORDER_NOT_CANCEL: 'Pedido não cancelado',
 }

@@ -8,14 +8,14 @@ import { ProductsController } from './controllers/productsController'
 import { OrdersController } from './controllers/ordersController'
 import logger from './logger'
 import { PaymentController } from './controllers/paymentController'
+import { EvaluationsController } from './controllers/EvaluationsController'
 
 export class SetupServer extends Server {
-	constructor(private port = 3000) {
+	constructor(private port = 3333) {
 		super()
 	}
 
 	public async init(): Promise<void> {
-		console.log('teste')
 		this.setupExpress()
 		this.setupControllers()
 
@@ -31,10 +31,8 @@ export class SetupServer extends Server {
 		const product = new ProductsController()
 		const order = new OrdersController()
 		const payment = new PaymentController()
-		// const evaluation = new EvaluationController()
-		this.addControllers([user, product, order, payment, 
-			// evaluation
-		])
+		const evaluation = new EvaluationsController()
+		this.addControllers([user, product, order, payment, evaluation])
 	}
 
 	private async databaseSetup(): Promise<void> {

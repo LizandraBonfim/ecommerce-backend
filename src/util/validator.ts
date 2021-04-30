@@ -197,3 +197,19 @@ export function cleanDocumentNumber(documentNumber: string): string {
 export function cleanPhoneNumber(numberPhone: string): string {
 	return numberPhone.replace(/[-/./(/)/ ]/g, '')
 }
+
+export const checksForFalsyValue = <T>(obj: Partial<T>) => {
+	const values = Object.values(obj)
+	const isValueInvalid = values.some((elem) => {
+		if (!elem) return !elem
+
+		return elem
+	})
+
+	if (isValueInvalid) {
+		throw {
+			code: 400,
+			message: 'Erro no formato da requisição',
+		}
+	}
+}
